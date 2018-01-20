@@ -2,8 +2,10 @@ package ie.droidfactory.drsensor;
 
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +47,10 @@ public class FragmentSensors extends MainFragment {
 
     private SelectInterface mListener;
 
+    private int stepChange = 0;
+
 
     private SensorListener accellerationCallback = new SensorListener() {
-
 
         @Override
         public void sensorCallback(boolean isOn, float sensorData) {
@@ -78,7 +81,21 @@ public class FragmentSensors extends MainFragment {
     private SensorListener stepCallback = new SensorListener() {
         @Override
         public void sensorCallback(boolean isOn, float sensorData) {
+
             tvStep.setText("total steps : "+String.valueOf(sensorData));
+            if(stepChange!=(int)sensorData){
+                //TODO: display RED single indicator with delay 0,5 sec
+//                displaySingleIndicator(SensorType.TYPE_STEP_COUNTER, sensorData);
+//                    imgIndicatorStep.setImageResource(R.mipmap.ic_single_indicator_red);
+                stepChange=(int) sensorData;
+            }
+        }
+    };
+    private SensorListener detectStepCallback = new SensorListener() {
+        @Override
+        public void sensorCallback(boolean isOn, float sensorData) {
+            if(isOn) imgIndicatorStep.setImageResource(R.mipmap.ic_single_indicator_red);
+            else imgIndicatorStep.setImageResource(R.mipmap.ic_single_indicator_green);
         }
     };
 
@@ -138,6 +155,35 @@ public class FragmentSensors extends MainFragment {
         MyButtons buttons = new MyButtons(getActivity());
         btStart.setOnClickListener(buttons);
         btnStop.setOnClickListener(buttons);
+    }
+
+    private void displaySingleIndicator(SensorType sensorType, float value){
+        if(sensorType==SensorType.TYPE_STEP_COUNTER){
+            changeSingleIndicator(imgIndicatorStep);
+        }
+    }
+
+    private void changeSingleIndicator(ImageView imageView){
+//        try {
+//            imageView.setImageResource(R.mipmap.ic_single_indicator_red);
+//            Thread.sleep(200); // delay 0.2 sec
+//        } catch(InterruptedException ex) {
+//            Thread.currentThread().interrupt();
+//        }
+//        imageView.setImageResource(R.mipmap.ic_single_indicator_green);
+        imageView.setImageResource(R.mipmap.ic_single_indicator_red);
+        new CountDownTimer(200, 200){
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                imageView.setImageResource(R.mipmap.ic_single_indicator_green);
+            }
+        }.start();
     }
 
     private void displayIndicator(SensorType sensorType, float value){
@@ -221,7 +267,7 @@ public class FragmentSensors extends MainFragment {
     private class MyButtons implements View.OnClickListener{
         MySensors sensors;
         MyButtons(Activity activity){
-            sensors = new MySensors(activity);
+            sensors = new MySensors(activity, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
         @Override
@@ -231,10 +277,14 @@ public class FragmentSensors extends MainFragment {
                     sensors.checkAcceleration(accellerationCallback);
                     sensors.checkRotation(rotationCallback);
                     sensors.checkLight(lightCallback);
-                    sensors.checkSteps(stepCallback);
+                    sensors.countSteps(stepCallback);
+                    sensors.detectSteps(detectStepCallback);
+                    imgIndicatorStep.setImageResource(R.mipmap.ic_single_indicator_green);
                     break;
                 case R.id.fragment_sensors_btn_stop:
                     sensors.disableSensorManager(lightCallback, rotationCallback, accellerationCallback, stepCallback);
+                    //set neutral color for step indicator
+                    imgIndicatorStep.setImageResource(R.mipmap.ic_single_indicator_blank);
                     break;
             }
         }

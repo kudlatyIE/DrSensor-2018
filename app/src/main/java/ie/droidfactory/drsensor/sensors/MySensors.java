@@ -32,27 +32,24 @@ public class MySensors {
     private SensorEventListener listenerLight, listenerAcc, listenerRotate, listenerSteps;
     private SoundAnalizer sound;
     private Activity ac;
+    private int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+    private boolean stepDetected=false;
 
 //    private TextView tvLight, tvAcc,tvNoise, tvRotate;
 
 
-    public MySensors(Activity activity){
+    public MySensors(Activity activity, int sensorDelay){
         this.ac=activity;
+        this.sensorDelay = sensorDelay;
         this.c=activity.getApplicationContext();
         this.seseManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-        for(Sensor sese: seseManager.getSensorList(Sensor.TYPE_ALL)){
-            Log.i("SENSORS", sese.getName()+" STATUS: "+sese.getPower());
-        }
-//        if(MySensors.sensors ==null) MySensors.sensors = new MySensors(0,0,0,0);
+//        for(Sensor sese: seseManager.getSensorList(Sensor.TYPE_ALL)){
+//            Log.i("SENSORS", sese.getName()+" STATUS: "+sese.getPower());
+//        }
+        startTime = System.currentTimeMillis();
     }
 
-    /*
-     * will use for create final average for each of sensor
-     */
-//    private MySensors(float light, float noise, float vibration, float other){
-//        this.light=light;
-//        this.noise=noise;
-//    }
+
 
     public void  checkLight(SensorListener callback){
         lightArr = new ArrayList<Float>();
@@ -76,12 +73,12 @@ public class MySensors {
         };
         sensorLight = seseManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         if(sensorLight!=null){
-            seseManager.registerListener(listenerLight, sensorLight, SensorManager.SENSOR_DELAY_UI);
+            seseManager.registerListener(listenerLight, sensorLight, sensorDelay);
         }
     }
 
-    public void checkSteps(SensorListener callback){
-        startTime = System.currentTimeMillis();
+    public void countSteps(SensorListener callback){
+
         stepInit = 0;
         listenerSteps = new SensorEventListener() {
             @Override
@@ -94,7 +91,6 @@ public class MySensors {
                 stepMumber = (int) steps[0] - stepInit;
 //                callback.sensorCallback(true, String.valueOf(stepMumber));
                 callback.sensorCallback(true, stepMumber);
-
             }
 
             @Override
@@ -104,9 +100,29 @@ public class MySensors {
         };
         sensorStep = seseManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if(sensorStep!=null)
-            seseManager.registerListener(listenerSteps, sensorStep, SensorManager.SENSOR_DELAY_UI);
-
+            seseManager.registerListener(listenerSteps, sensorStep, sensorDelay);
     }
+    public void detectSteps(SensorListener callback){
+
+        stepInit = 0;
+        listenerSteps = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                if(stepDetected) stepDetected=false;
+                else stepDetected = true;
+                callback.sensorCallback(stepDetected, 0);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
+        sensorStep = seseManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        if(sensorStep!=null)
+            seseManager.registerListener(listenerSteps, sensorStep, sensorDelay);
+    }
+
 
     public void checkAcceleration(SensorListener callback){
         callback.sensorCallback(false, 0);
@@ -137,7 +153,7 @@ public class MySensors {
             }
         };
         sensorAcc = seseManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if(sensorAcc!=null) seseManager.registerListener(listenerAcc, sensorAcc, SensorManager.SENSOR_DELAY_UI);
+        if(sensorAcc!=null) seseManager.registerListener(listenerAcc, sensorAcc, sensorDelay);
     }
 
     public void checkRotation(SensorListener callback){
@@ -170,7 +186,7 @@ public class MySensors {
             }
         };
         sensorRotate = seseManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        if(sensorRotate!=null) seseManager.registerListener(listenerRotate, sensorRotate, SensorManager.SENSOR_DELAY_UI);
+        if(sensorRotate!=null) seseManager.registerListener(listenerRotate, sensorRotate, sensorDelay);
     }
 
     public void checkNoise(TextView display){
