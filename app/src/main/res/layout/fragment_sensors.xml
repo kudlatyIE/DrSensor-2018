@@ -1,0 +1,135 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/default_half_margin"
+    android:paddingEnd="@dimen/default_half_margin"
+    android:orientation="vertical"
+    tools:context="ie.droidfactory.drsensor.FragmentSensors">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/fragment_sensors_text_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/default_half_margin"
+        android:text="SENSORS TEST:" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/default_half_margin"
+            android:text="LIGHT:"/>
+        <TextView
+            android:id="@+id/fragment_sensors_text_light"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/hello_blank_fragment" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/fragment_sensors_img_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_indicator_0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/default_half_margin"
+            android:text="GYRO:"/>
+        <TextView
+            android:id="@+id/fragment_sensors_text_rotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/hello_blank_fragment" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/fragment_sensors_img_rotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_indicator_0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/default_half_margin"
+            android:text="ACC :"/>
+        <TextView
+            android:id="@+id/fragment_sensors_text_acceleration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/hello_blank_fragment" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/fragment_sensors_img_acceleration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_indicator_0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/default_half_margin"
+            android:text="STEP"/>
+        <TextView
+            android:id="@+id/fragment_sensors_text_step"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/hello_blank_fragment" />
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/fragment_sensors_img_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_indicator_0"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/default_half_margin"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/fragment_sensors_btn_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"/>
+        <Button
+            android:id="@+id/fragment_sensors_btn_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="STOP"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
